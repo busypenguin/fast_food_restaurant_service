@@ -101,14 +101,10 @@ def view_restaurants(request):
     })
 
 
-@user_passes_test(is_manager, login_url='restaurateur:login')
-def view_orders(request):
-    order_items = Order.objects.exclude(status='DONE').prefetch_related('order_products').order_cost().get_available_restaurants()
+def get_address_with_coords(order_items):
     rests = Restaurant.objects.all()
-
     addresses = []
     address_with_coords = {}
-
     for rest in rests:
         addresses.append(rest.address)
     for order in order_items:
@@ -138,8 +134,15 @@ def view_orders(request):
             continue
         except requests.RequestException:
             address_with_coords[None] = (0, 0)
+    return address_with_coords
+
+
+@user_passes_test(is_manager, login_url='restaurateur:login')
+def view_orders(request):
+    order_items = Order.objects.exclude(status='DONE').prefetch_related('order_products').order_cost().get_available_restaurants()
 
     orders_with_restaurants = []
+    address_with_coords = get_address_with_coords(order_items)
 
     for order in order_items:
         rests_and_distance = []

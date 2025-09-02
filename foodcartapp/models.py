@@ -136,7 +136,7 @@ class OrderQuerySet(models.QuerySet):
             )
 
     def get_available_restaurants(self):
-        rest_items = RestaurantMenuItem.objects.select_related('product').select_related('restaurant').filter(availability=True)
+        rest_items = RestaurantMenuItem.objects.select_related('product', 'restaurant').filter(availability=True)
         rests_with_products = defaultdict(set)
 
         for item in rest_items:

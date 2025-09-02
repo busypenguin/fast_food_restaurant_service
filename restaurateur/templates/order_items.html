@@ -46,7 +46,7 @@
             {% if item.available_restaurants %}
               <details><summary>Может быть приготовлен ресторанами:</summary>
                 {% for restaurant in item.available_restaurants %}
-                  {{ restaurant}} км
+                  <p>{{ restaurant.0}}-{{ restaurant.1}} км</p>
                 {% endfor %}
               </details>
             {% endif %}
